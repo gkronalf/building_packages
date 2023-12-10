@@ -1,2 +1,4 @@
-# building_packages
+# Building RPM package  
+  
+### Описание проекта
  
