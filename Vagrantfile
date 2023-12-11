@@ -11,19 +11,21 @@ Vagrant.configure(2) do |config|
       reposrv.vm.network "private_network", ip: "192.168.50.10",  virtualbox__intnet: "net1" 
       reposrv.vm.hostname = "reposrv"
       reposrv.vm.provision :file, source: './scripts', destination: '/home/vagrant/scripts'
-      reposrv.vm.provision "shell", inline: <<-SHELL
-         yum update
-         yum install -y \
-            redhat-lsb-core \
-            wget \
-            rpmdevtools \
-            rpm-build \
-            createrepo \
-            yum-utils \
-            gcc
-         sudo chmod u+x ./scripts/*.sh
-      SHELL
-      #reposrv.vm.provision "shell", path: "./scripts/script_reposrv.sh"
+      # reposrv.vm.provision "shell", inline: <<-SHELL
+      #    yum update
+      #    yum install -y \
+      #       redhat-lsb-core \
+      #       wget \
+      #       rpmdevtools \
+      #       rpm-build \
+      #       createrepo \
+      #       yum-utils \
+      #       gcc
+      #    sudo chmod u+x ./scripts/*.sh
+      # SHELL
+      reposrv.vm.provision "shell", path: "./scripts/script_reposrv_install_tools.sh"
+      reposrv.vm.provision "shell", path: "./scripts/script_reposrv_build_nginx.sh"
+      reposrv.vm.provision "shell", path: "./scripts/script_reposrv_create_repo.sh"
    end
    config.vm.synced_folder '.', '/vagrant', disabled: true
 
@@ -31,7 +33,7 @@ Vagrant.configure(2) do |config|
       repoclient.vm.network "private_network", ip: "192.168.50.11",  virtualbox__intnet: "net1" 
       repoclient.vm.hostname = "repoclient" 
       repoclient.vm.provision :file, source: './scripts', destination: '/home/vagrant/scripts'
-      #repoclient.vm.provision "shell", path: "./scripts/script_repoclient.sh"
+      repoclient.vm.provision "shell", path: "./scripts/script_repoclient.sh"
    end
    config.vm.synced_folder '.', '/vagrant', disabled: true
 end 
